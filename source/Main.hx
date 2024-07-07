@@ -78,18 +78,6 @@ class Main extends Sprite
 
 	private function setupGame():Void
 	{
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-
-		if (zoom == -1)
-		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
-			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(stageWidth / zoom);
-			gameHeight = Math.ceil(stageHeight / zoom);
-		}
-
 		// #if !debug
 		// #if HIT_SINGLE
 		// initialState = meta.states.HitSingleInit;
@@ -101,7 +89,6 @@ class Main extends Sprite
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FNFGame(gameWidth, gameHeight, initialState, #if(flixel < "5.0.0")zoom,#end framerate, framerate, skipSplash, startFullscreen));
 
-		#if !mobile
 		fpsVar = new FPSCounter(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
 		Lib.current.stage.align = "tl";
@@ -109,7 +96,6 @@ class Main extends Sprite
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.showFPS;
 		}
-		#end
 		
 		// #if !DEBUG_MODE
 		// 	compilationInformation = new TextField();
