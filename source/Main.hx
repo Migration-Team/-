@@ -3,6 +3,7 @@ package;
 import sys.thread.Thread;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
+import haxe.io.Path;
 import flixel.FlxGame;
 import flixel.FlxState;
 import flixel.util.FlxColor;
@@ -17,6 +18,12 @@ import openfl.display.StageScaleMode;
 import meta.states.*;
 import meta.data.*;
 import meta.CompilationStuff;
+
+#if android
+import android.content.Context;
+import android.os.Build;
+#end
+
 
 class Main extends Sprite
 {
@@ -37,12 +44,26 @@ class Main extends Sprite
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
+		#if cpp
+		cpp.NativeGc.enable(true);
+		#elseif hl
+		hl.Gc.enable(true);
+		#end
 	}
 
 	public function new()
 	{
 		super();
 
+		#if android
+		if (VERSION.SDK_INT > 30)
+			Sys.setCwd(Path.addTrailingSlash(Context.getObbDir()));
+		else
+			Sys.setCwd(Path.addTrailingSlash(Context.getExternalFilesDir()));
+		#elseif ios
+		Sys.setCwd(System.documentsDirectory);
+		#end
+		
 		if (stage != null)
 		{
 			init();
@@ -77,15 +98,7 @@ class Main extends Sprite
 	}
 
 	private function setupGame():Void
-	{
-		// #if !debug
-		// #if HIT_SINGLE
-		// initialState = meta.states.HitSingleInit;
-		// #else
-		// initialState = TitleState;		
-		// #end
-		// #end
-
+        {
 		ClientPrefs.loadDefaultKeys();
 		addChild(new FNFGame(gameWidth, gameHeight, initialState, #if(flixel < "5.0.0")zoom,#end framerate, framerate, skipSplash, startFullscreen));
 
@@ -116,11 +129,10 @@ class Main extends Sprite
 		FlxG.signals.gameResized.add(onResize);
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
 		FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
-
-
-
-
-
+		
+		#if android
+		FlxG.android.preventDefaultKeys = [BACK]; 
+		#end
 	}
 	private static function onStateSwitch() {
 		scaleMode.resetSize();
