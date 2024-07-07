@@ -444,7 +444,7 @@ class FunkinLua extends FunkinScript
 							}
 							// TODO: table
 
-							if(pop==2)Lua.rawseti(lua, tableIdx); // then set it
+							if(pop==2)Lua.rawset(lua, tableIdx); // then set it
 			        Lua.pop(luaInstance.lua, 1); // for the loop
 			      }
 			      Lua.pop(luaInstance.lua,1); // end the loop entirely
