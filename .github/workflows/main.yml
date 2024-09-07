@@ -49,7 +49,7 @@ jobs:
       
       - name: Install Haxelib
         run: |
-          haxelib setup ~/haxelib
+          haxelib setup /home/runner/haxelib
           haxelib install hxcpp
           haxelib install lime
           haxelib install openfl 9.2.2
